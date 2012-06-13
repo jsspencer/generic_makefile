@@ -205,8 +205,8 @@ $(EXE)/$(LIB_VERSION): $(LIB_OBJECTS)
 	$(AR) $(ARFLAGS) $@ $^
 
 # Remove compiled objects and executable.
-clean: 
-	rm -f $(DEST)/*.{d,o} $(EXE)/$(PROG_VERSION)
+clean:
+	rm -f $(DEST)/* $(EXE)/$(PROG_VERSION) $(EXE)/$(LIB_VERSION)
 
 cleanall:
 	rm -rf $(DEST_ROOT) $(EXE)
