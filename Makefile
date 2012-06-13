@@ -27,8 +27,10 @@ SHELL=/bin/bash # For our sanity!
 
 ifeq ($(ARCH),)
 include make.inc
+SETTINGS_INC = make.inc
 else
 include make.inc.$(ARCH)
+SETTINGS_INC = make.inc.$(ARCH)
 endif
 
 #-----
@@ -229,7 +231,30 @@ library: $(EXE)/$(LIB)
 
 # TODO
 help:
+	@echo Usage: make target [ARCH=XXX]
 	@echo
+	@echo Takes settings from make.inc.XXX if ARCH is set and from make.inc otherwise.
+	@echo
+	@echo Available targets:
+	@echo
+	@echo $(EXE)/$(PROG)
+	@echo -e "\tCompile $(EXE)/$(PROG_VERSION) and create $(EXE)/$(PROG) as a symbolic link to it."
+	@echo $(EXE)/$(PROG_VERSION)
+	@echo -e "\tCompile the $(EXE)/$(PROG_VERSION) executable using the settings in $(SETTINGS_INC)."
+	@echo $(EXE)/$(LIB)
+	@echo -e "\tCompile $(EXE)/$(LIB_VERSION) and create $(EXE)/$(LIB) as a symbolic link to it."
+	@echo $(EXE)/$(LIB_VERSION)
+	@echo -e "\tCompile the $(EXE)/$(LIB_VERSION) library using the settings in $(SETTINGS_INC)."
+	@echo program
+	@echo -e "\tShortcut for the $(EXE)/$(PROG) target."
+	@echo library
+	@echo -e "\tShortcut for the $(EXE)/$(LIB) target."
+	@echo ctags
+	@echo -e "\tRun ctags on all source files."
+	@echo clean
+	@echo -e "\tDelete all object files, binaries and libraries created using $(SETTINGS_INC)."
+	@echo cleanall
+	@echo -e "\tDelete all object files, dependency files, binaries and libraries created by all configurations."
 
 #-----
 # Include dependency file.
