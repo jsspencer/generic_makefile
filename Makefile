@@ -68,10 +68,10 @@ PROG = $(PROG_NAME).x
 # main() or equivalent procedure) in order to create a library.
 
 # Specific version of library.
-LIB_VERSION = $(PROG_NAME).$(CONFIG).$(OPT).a
+LIB_VERSION = lib$(PROG_NAME).$(CONFIG).$(OPT).a
 
 # Symbolic link which points to $(LIB_VERSION).
-LIB = $(PROG_NAME).a
+LIB = lib$(PROG_NAME).a
 
 #-----
 # Directory structure and setup.
