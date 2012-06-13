@@ -132,7 +132,7 @@ endif
 F_FILES = $(filter $(addprefix %,$(FEXTS)), $(SRCFILES))
 ifeq ($(F_FILES),)
 # leave blank to match the analagous behaviour of C_DEPEND.
-F_DEPEND = 
+F_DEPEND =
 else
 F_DEPEND = $(DEPEND_DIR)/fortran.d
 endif
