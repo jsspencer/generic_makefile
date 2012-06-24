@@ -138,16 +138,16 @@ INCLUDE = $(addprefix -I ,$(SRCDIRS))
 find_files = $(foreach ext,$(EXTS), $(wildcard $(dir)/*$(ext)))
 SRCFILES := $(foreach dir,$(SRCDIRS),$(find_files))
 
-# Objects (strip path and replace extension of source files with .o).
-OBJ := $(addsuffix .o,$(basename $(notdir $(SRCFILES))))
+# Function to obtain full path to all objects from source filename(s).
+objects_path = $(addprefix $(DEST)/, $(addsuffix .o,$(basename $(notdir $(1)))))
 
 # Full path to all objects.
-OBJECTS := $(addprefix $(DEST)/, $(OBJ))
+OBJECTS := $(call objects_path, $(SRCFILES))
 
 # Full path to all objects in library.
 ifneq ($(MAIN),)
-MAIN_OBJ := $(addsuffix .o,$(basename $(notdir $(MAIN))))
-LIB_OBJECTS := $(addprefix $(DEST)/, $(filter-out $(MAIN_OBJ),$(OBJ)))
+MAIN_OBJ := $(call objects_path, $(MAIN))
+LIB_OBJECTS := $(filter-out $(MAIN_OBJ),$(OBJECTS))
 else
 LIB_OBJECTS := $(OBJECTS)
 endif
