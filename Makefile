@@ -297,6 +297,7 @@ ifneq ($(C_DEPEND),)
 include $(C_DEPEND)
 endif
 
+# Other dependencies.
 ifneq ($(FORCE_REBUILD_FILES),)
 FORCE_REBUILD_OBJECTS := $(call objects_path, $(FORCE_REBUILD_FILES))
 $(FORCE_REBUILD_OBJECTS): $(SRCFILES)

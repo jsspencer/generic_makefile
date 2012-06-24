@@ -105,6 +105,12 @@ source files with the exception of (if relevant) the source file containing the
 entry point to the program (i.e. the file containing the ``main`` procedure or
 equivalent.
 
+Compatibility
+-------------
+
+Only tested with GNU Make 3.81 and 3.82.  Unlikely to work with other versions
+of Make and very unlikely to (fully) work with earlier versions of GNU Make.
+
 License
 -------
 
