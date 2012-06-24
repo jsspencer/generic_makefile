@@ -54,8 +54,8 @@ libPROG_NAME.CONFIG.OPT.a
 Usage
 -----
 
-#. Set the PROG_NAME, VPATH and (if desired or relevant) MAIN variables at the
-   top of ``Makefile``.
+#. Set the PROG_NAME and VPATH variables and (if desired or relevant) the MAIN
+   and FORCE_REBUILD_FILES variables at the top of ``Makefile``.
 #. Set the relevant variables in ``make.inc`` or ``make.inc.XXX`` (where XXX is
    an arbitrary variable).  Variables need not be set if they are not
    used---e.g.  the Fortran and C++ flags can be left unset for a pure

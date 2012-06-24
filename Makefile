@@ -54,6 +54,10 @@ VPATH =
 # procedures, if desired.
 MAIN = 
 
+# Name of source files (if any) which must be recompiled if any other source
+# files need to be recompiled.
+FORCE_REBUILD_FILES = 
+
 #-----
 # Should not need to change anything below here.
 #-----
@@ -291,4 +295,9 @@ include $(F_DEPEND)
 endif
 ifneq ($(C_DEPEND),)
 include $(C_DEPEND)
+endif
+
+ifneq ($(FORCE_REBUILD_FILES),)
+FORCE_REBUILD_OBJECTS := $(call objects_path, $(FORCE_REBUILD_FILES))
+$(FORCE_REBUILD_OBJECTS): $(SRCFILES)
 endif
