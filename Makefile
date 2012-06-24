@@ -1,3 +1,7 @@
+# A generic makefile for Fortran, C and C++ code.
+#
+# http://github.com/jsspencer/generic_makefile
+#
 # copyright (c) 2012, James Spencer.
 #
 # MIT license:
@@ -229,7 +233,6 @@ ctags:
 program: $(EXE)/$(PROG)
 library: $(EXE)/$(LIB)
 
-# TODO
 help:
 	@echo Usage: make target [ARCH=XXX]
 	@echo
