@@ -219,14 +219,14 @@ $(DEPEND_DIR)/%.d: %.cpp
 
 # Compile program.
 $(EXE)/$(PROG): $(EXE)/$(PROG_VERSION)
-	cd $(EXE) && ln -s -f $(notdir $<) $(notdir $@)
+	cd $(EXE) && ln -s -f $(<F) $(@F)
 
 $(EXE)/$(PROG_VERSION): $(OBJECTS)
 	$(LD) -o $@ $(FFLAGS) $(LDFLAGS) -I $(DEST) $(OBJECTS) $(LIBS)
 
 # Compile library.
 $(EXE)/$(LIB): $(EXE)/$(LIB_VERSION)
-	cd $(EXE) && ln -s -f $(notdir $<) $(notdir $@)
+	cd $(EXE) && ln -s -f $(<F) $(@F)
 
 $(EXE)/$(LIB_VERSION): $(LIB_OBJECTS)
 	$(AR) $(ARFLAGS) $@ $^
