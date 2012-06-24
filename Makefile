@@ -59,6 +59,25 @@ MAIN =
 #-----
 
 #-----
+# Error checking
+
+ifneq ($(filter-out $(MAKECMDGOALS),help),)
+ifeq ($(PROG_NAME),)
+$(error ERROR: PROG_NAME is not defined.)
+endif
+ifeq ($(VPATH),)
+$(error ERROR: VPATH is not defined.)
+endif
+endif
+
+ifeq ($(filter $(MAKECMDGOALS),help),help)
+ifeq ($(PROG_NAME),)
+$(warning WARNING: PROG_NAME is not defined.)
+PROG_NAME = PROG_NAME
+endif
+endif
+
+#-----
 # Program
 
 # A source file *must* contain a program entry (e.g.  main() or equivalent
