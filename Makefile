@@ -217,16 +217,18 @@ $(DEPEND_DIR)/%.d: %.cpp
 
 .PHONY: clean cleanall new help ctags program library
 
+LINK_MACRO = cd $(@D) && ln -s -f $(<F) $(@F)
+
 # Compile program.
 $(EXE)/$(PROG): $(EXE)/$(PROG_VERSION)
-	cd $(EXE) && ln -s -f $(<F) $(@F)
+	$(LINK_MACRO)
 
 $(EXE)/$(PROG_VERSION): $(OBJECTS)
 	$(LD) -o $@ $(FFLAGS) $(LDFLAGS) -I $(DEST) $(OBJECTS) $(LIBS)
 
 # Compile library.
 $(EXE)/$(LIB): $(EXE)/$(LIB_VERSION)
-	cd $(EXE) && ln -s -f $(<F) $(@F)
+	$(LINK_MACRO)
 
 $(EXE)/$(LIB_VERSION): $(LIB_OBJECTS)
 	$(AR) $(ARFLAGS) $@ $^
