@@ -92,12 +92,14 @@ EXE = bin
 # Directory for dependency files.
 DEPEND_DIR = $(DEST_ROOT)/depend
 
+ifneq ($(filter-out $(MAKECMDGOALS),help),)
 # We put compiled objects and modules in $(DEST).  If it doesn't exist, create it.
 make_dest := $(shell test -e $(DEST) || mkdir -p $(DEST))
 # We put the compiled executable in $(EXE).  If it doesn't exist, then create it.
 make_exe := $(shell test -e $(EXE) || mkdir -p $(EXE))
 # We put the compiled executable in $(DEPEND_DIR).  If it doesn't exist, then create it.
 make_depend := $(shell test -e $(DEPEND_DIR) || mkdir -p $(DEPEND_DIR))
+endif
 
 #-----
 # Find source files and resultant object files.
