@@ -125,7 +125,7 @@ OBJECTS := $(addprefix $(DEST)/, $(OBJ))
 
 # Full path to all objects in library.
 ifneq ($(MAIN),)
-MAIN_OBJ := $(addsuffix .o,$(basename $(notdir) $(MAIN)))
+MAIN_OBJ := $(addsuffix .o,$(basename $(notdir $(MAIN))))
 LIB_OBJECTS := $(addprefix $(DEST)/, $(filter-out $(MAIN_OBJ),$(OBJ)))
 else
 LIB_OBJECTS := $(OBJECTS)
