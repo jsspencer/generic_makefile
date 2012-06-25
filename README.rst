@@ -59,7 +59,8 @@ Usage
 #. Set the relevant variables in ``make.inc`` or ``make.inc.XXX`` (where XXX is
    an arbitrary variable).  Variables need not be set if they are not
    used---e.g.  the Fortran and C++ flags can be left unset for a pure
-   C project.
+   C project.  An example ``make.inc`` file for the GCC compiler suite is
+   included.
 #. Run::
 
        $ make help
@@ -110,6 +111,22 @@ Compatibility
 
 Only tested with GNU Make 3.81 and 3.82.  Unlikely to work with other versions
 of Make and very unlikely to (fully) work with earlier versions of GNU Make.
+
+mkconfig
+--------
+
+``tools/mkconfig`` can generate ``make.inc`` files from simple ini-style
+configuration files.  An example configuration file for the GCC compiler suite,
+``config/gnu``, is included.  See::
+
+    tools/mkconfig --help
+
+and
+
+    tools/mkconfig --help-long
+
+for more details.
+
 
 License
 -------

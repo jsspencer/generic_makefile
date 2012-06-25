@@ -1,0 +1,19 @@
+# Example config file for mkconfig for GCC compiler suite.
+
+[main]
+fc = gfortran
+cc = gcc
+cxx = g++
+ld = gfortran
+libs = -llapack -lblas -lstdc++
+f90_module_flag = -J
+
+[opt]
+fflags = -O3
+cflags = -O3
+cxxflags = -O3
+
+[dbg]
+fflags = -g
+cflags = -g
+cxxflags = -g
