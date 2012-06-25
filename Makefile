@@ -214,7 +214,7 @@ $(DEST)/%.o: %.cpp
 
 # corresponding dependency...
 $(DEPEND_DIR)/%.d: %.cpp
-	$(CC) $(INCLUDE) $(CXXFLAGS) -MM -MT $(@:.d=.o) $< -o $@
+	$(CXX) $(INCLUDE) $(CXXFLAGS) -MM -MT $(@:.d=.o) $< -o $@
 
 #-----
 # Goals.
