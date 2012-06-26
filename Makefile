@@ -267,7 +267,7 @@ help:
 	@echo
 	@echo Available targets:
 	@echo
-	@echo $(EXE)/$(PROG)
+	@echo $(EXE)/$(PROG) [default]
 	@echo -e "\tCompile $(EXE)/$(PROG_VERSION) and create $(EXE)/$(PROG) as a symbolic link to it."
 	@echo $(EXE)/$(PROG_VERSION)
 	@echo -e "\tCompile the $(EXE)/$(PROG_VERSION) executable using the settings in $(SETTINGS_INC)."
@@ -285,6 +285,8 @@ help:
 	@echo -e "\tDelete all object files, binaries and libraries created using $(SETTINGS_INC)."
 	@echo cleanall
 	@echo -e "\tDelete all object files, dependency files, binaries and libraries created by all configurations."
+	@echo new
+	@echo -e "\tRun the clean and then $(EXE)/$(PROG) targets."
 
 #-----
 # Include dependency file.
