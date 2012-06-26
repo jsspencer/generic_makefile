@@ -202,7 +202,7 @@ $(DEST)/%.o: %.c
 
 # corresponding dependency...
 $(DEPEND_DIR)/%.d: %.c
-	$(CC) $(INCLUDE) $(CFLAGS) -MM -MT $(@:.d=.o) $< -o $@
+	$(CC) $(INCLUDE) $(CFLAGS) -MM -MT '$$(DEST)/$(@F:.d=.o)' $< -o $@
 
 #--- C++ ---
 
@@ -214,7 +214,7 @@ $(DEST)/%.o: %.cpp
 
 # corresponding dependency...
 $(DEPEND_DIR)/%.d: %.cpp
-	$(CXX) $(INCLUDE) $(CXXFLAGS) -MM -MT $(@:.d=.o) $< -o $@
+	$(CXX) $(INCLUDE) $(CXXFLAGS) -MM -MT '$$(DEST)/$(@F:.d=.o)' $< -o $@
 
 #-----
 # Goals.
