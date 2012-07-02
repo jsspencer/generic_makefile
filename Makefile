@@ -65,7 +65,7 @@ FORCE_REBUILD_FILES =
 #-----
 # Error checking
 
-ifneq ($(filter-out $(MAKECMDGOALS),help),)
+ifneq ($(filter-out help,$(MAKECMDGOALS)),)
 ifeq ($(PROG_NAME),)
 $(error ERROR: PROG_NAME is not defined.)
 endif
@@ -74,10 +74,23 @@ $(error ERROR: VPATH is not defined.)
 endif
 endif
 
-ifeq ($(filter $(MAKECMDGOALS),help),help)
+ifeq ($(filter help,$(MAKECMDGOALS)),help)
 ifeq ($(PROG_NAME),)
 $(warning WARNING: PROG_NAME is not defined.)
 PROG_NAME = PROG_NAME
+endif
+endif
+
+#-----
+# Type of target
+
+ifeq ($(MAKECMDGOALS),)
+__COMPILE_TARGET__ := yes
+else
+ifneq ($(filter-out help clean cleanall ctags,$(MAKECMDGOALS)),)
+__COMPILE_TARGET__ := yes
+else
+__COMPILE_TARGET__ := no
 endif
 endif
 
@@ -115,7 +128,7 @@ EXE = bin
 # Directory for dependency files.
 DEPEND_DIR = $(DEST_ROOT)/depend
 
-ifneq ($(filter-out $(MAKECMDGOALS),help),)
+ifeq ($(__COMPILE_TARGET__),yes)
 # We put compiled objects and modules in $(DEST).  If it doesn't exist, create it.
 make_dest := $(shell test -e $(DEST) || mkdir -p $(DEST))
 # We put the compiled executable in $(EXE).  If it doesn't exist, then create it.
@@ -292,11 +305,13 @@ help:
 # Include dependency file.
 
 # $(*_DEPEND) will be generated if it doesn't exist.
+ifeq ($(__COMPILE_TARGET__),yes)
 ifneq ($(F_DEPEND),)
 include $(F_DEPEND)
 endif
 ifneq ($(C_DEPEND),)
 include $(C_DEPEND)
+endif
 endif
 
 # Other dependencies.
