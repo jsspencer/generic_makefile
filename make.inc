@@ -12,6 +12,16 @@ OPT = optimised
 #-----
 # Compiler configuration.
 
+# --- Preprocessor ---
+
+# If CPP is defined, then this is used to do the preprocessing on Fortran
+# source files and then the Fortran compiler is called.  If CPP is not defined,
+# then CPPFLAGS is passed to the Fortran compiler and the Fortran source files
+# are preprocessed and compiled in a single step.
+# All C and C++ files are preprocessed and compiled in one step by the C and
+# C++ compilers, with CPPFLAGS passed to the C and C++ compilers.
+CPP =
+
 # Pre-processing flags
 # Used for *.F, *.F90, *.c and *.cpp files.
 CPPFLAGS =

@@ -86,6 +86,9 @@ cxx
     Set the C++ compiler.
 cxxflags
     Set flags to be passed to the C++ compiler during compilation.
+cpp
+    Set the C preprocessor to be used on Fortran source files.  If not defined
+    then the Fortran compiler is used to do the preprocessing.
 cppflags
     Set flags to be used in the C pre-processing step.
     C pre-processing is applied to .F90, .F, .c and .cpp files (and not .f90
@@ -126,6 +129,14 @@ OPT = %(opt_level)s
 
 #-----
 # Compiler configuration.
+
+# If CPP is defined, then this is used to do the preprocessing on Fortran
+# source files and then the Fortran compiler is called.  If CPP is not defined,
+# then CPPFLAGS is passed to the Fortran compiler and the Fortran source files
+# are preprocessed and compiled in a single step.
+# All C and C++ files are preprocessed and compiled in one step by the C and
+# C++ compilers, with CPPFLAGS passed to the C and C++ compilers.
+CPP = %(cpp)s
 
 # Pre-processing flags
 # Used for *.F, *.F90, *.c and *.cpp files.
@@ -234,7 +245,7 @@ def parse_config(config_file):
     valid_sections_upper = [section.upper() for section in valid_sections]
 
     valid_options = ['fc', 'fflags', 'cc', 'cflags', 'cxx', 'cxxflags',
-            'cppflags', 'ld', 'ldflags', 'libs', 'ar', 'arflags',
+            'cpp', 'cppflags', 'ld', 'ldflags', 'libs', 'ar', 'arflags',
             'f90_module_flag']
 
     default_settings = dict((key, '') for key in valid_options)

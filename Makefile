@@ -195,9 +195,19 @@ C_DEPEND = $(addprefix $(DEPEND_DIR)/, $(addsuffix .d, $(basename $(notdir $(C_F
 
 # Files to be pre-processed then compiled.
 $(DEST)/%.o: %.F
+ifdef CPP
+	$(CPP) $(CPPFLAGS) $< $(@:.o=.f90)
+	$(FC) -c $(FFLAGS) $(@:.o=.f90) -o $@ $(F90_MOD_FLAG)$(DEST)
+else
 	$(FC) $(CPPFLAGS) -c $(FFLAGS) $< -o $@ $(F90_MOD_FLAG)$(DEST)
+endif
 $(DEST)/%.o: %.F90
+ifdef CPP
+	$(CPP) $(CPPFLAGS) $< $(@:.o=.f90)
+	$(FC) -c $(FFLAGS) $(@:.o=.f90) -o $@ $(F90_MOD_FLAG)$(DEST)
+else
 	$(FC) $(CPPFLAGS) -c $(FFLAGS) $< -o $@ $(F90_MOD_FLAG)$(DEST)
+endif
 
 # Files to compiled directly.
 $(DEST)/%.o: %.f
