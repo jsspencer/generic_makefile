@@ -30,12 +30,11 @@ SHELL=/bin/bash # For our sanity!
 # Include arch file.
 
 ifeq ($(ARCH),)
-include make.inc
 SETTINGS_INC = make.inc
 else
-include make.inc.$(ARCH)
 SETTINGS_INC = make.inc.$(ARCH)
 endif
+include $(SETTINGS_INC)
 
 #-----
 # Configuration
