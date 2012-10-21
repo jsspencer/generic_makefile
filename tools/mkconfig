@@ -93,8 +93,8 @@ cpp
     Set the C preprocessor to be used on Fortran source files.  If not defined
     then the Fortran compiler is used to do the preprocessing.
 cppflags
-    Set flags to be used in the C pre-processing step.
-    C pre-processing is applied to .F90, .F, .c and .cpp files (and not .f90
+    Set flags to be used in the C preprocessing step.
+    C preprocessing is applied to .F90, .F, .c and .cpp files (and not .f90
     files).
 ld
     Set the linker program.
@@ -133,6 +133,7 @@ OPT = %(opt_level)s
 #-----
 # Compiler configuration.
 
+# --- Preprocessor ---
 # If CPP is defined, then this is used to do the preprocessing on Fortran
 # source files and then the Fortran compiler is called.  If CPP is not defined,
 # then CPPFLAGS is passed to the Fortran compiler and the Fortran source files
@@ -141,7 +142,7 @@ OPT = %(opt_level)s
 # C++ compilers, with CPPFLAGS passed to the C and C++ compilers.
 CPP = %(cpp)s
 
-# Pre-processing flags
+# Preprocessing flags
 # Used for *.F, *.F90, *.c and *.cpp files.
 CPPFLAGS = %(cppflags)s
 

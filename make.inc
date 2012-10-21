@@ -13,7 +13,6 @@ OPT = optimised
 # Compiler configuration.
 
 # --- Preprocessor ---
-
 # If CPP is defined, then this is used to do the preprocessing on Fortran
 # source files and then the Fortran compiler is called.  If CPP is not defined,
 # then CPPFLAGS is passed to the Fortran compiler and the Fortran source files
@@ -22,7 +21,7 @@ OPT = optimised
 # C++ compilers, with CPPFLAGS passed to the C and C++ compilers.
 CPP =
 
-# Pre-processing flags
+# Preprocessing flags
 # Used for *.F, *.F90, *.c and *.cpp files.
 CPPFLAGS =
 
