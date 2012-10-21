@@ -68,7 +68,7 @@ Any option not specified in the 'opt' and 'dbg' sections is inherited from the
 'main' section.  The settings in 'opt' are used by default; the debug options
 can be selected by passing the -g option to mkconfig.
 
-Available options are:
+All options are strings unless otherwise specified.  Available options are:
 
 fc
     Set the fortran compiler.
@@ -78,6 +78,9 @@ f90_module_flag
     Set the flag used by the compiler which is used to specify the directory
     where module (.mod) files are placed when created and where they should be
     searched for.
+f90_module_flag_pad [boolean]
+    True if a space needs to be inserted between the defined f90_module_flag
+    and the corresponding directory argument.  Default: true.
 cc
     Set the C compiler.
 cflags
@@ -246,11 +249,24 @@ def parse_config(config_file):
 
     valid_options = ['fc', 'fflags', 'cc', 'cflags', 'cxx', 'cxxflags',
             'cpp', 'cppflags', 'ld', 'ldflags', 'libs', 'ar', 'arflags',
-            'f90_module_flag']
+            'f90_module_flag', 'f90_module_flag_pad']
+
+    boolean_states = {'0': False,
+            '1': True,
+            'false': False,
+            'no': False,
+            'off': False,
+            'on': True,
+            'true': True,
+            'yes': True}
 
     default_settings = dict((key, '') for key in valid_options)
-    default_settings['ar'] = 'ar'
-    default_settings['arflags'] = '-rcs'
+    default_settings.update(
+            dict(ar='ar',
+                 arflags='-rcs',
+                 f90_module_flag_pad='True'
+                )
+            )
 
     parser.read(config_file)
 
@@ -285,10 +301,14 @@ def parse_config(config_file):
             if opt not in valid_options:
                 err = 'Invalid option in configuration file: %s.' % (opt)
                 raise IOError(err)
-        # Fill in blanks
-        for opt in valid_options:
-            if opt not in list(config[section].keys()):
-                config[section][opt] = ''
+        # Update the module flag if a space needs to be appended.
+        pad = config[section].pop('f90_module_flag_pad')
+        # pad is a string rather than bool; use the same comparison that
+        # configparser uses to determine if pad is set to true.
+        if pad.lower() not in boolean_states:
+            raise ValueError('Not a boolean: %s' % pad)
+        if boolean_states[pad.lower()]:
+            config[section]['f90_module_flag'] += ' '
 
     return config
 
