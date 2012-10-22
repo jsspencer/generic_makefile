@@ -19,6 +19,7 @@ OPT = optimised
 # are preprocessed and compiled in a single step.
 # All C and C++ files are preprocessed and compiled in one step by the C and
 # C++ compilers, with CPPFLAGS passed to the C and C++ compilers.
+# NOTE: if you use cpp you will almost certainly have to provide the -C -P flags.
 CPP =
 
 # Preprocessing flags
@@ -38,12 +39,22 @@ F90_MOD_FLAG = -J
 CC = gcc
 # compiler flags
 CFLAGS = -O3
+# Not all compilers (e.g. xlc) support -MM -MT that we require to produce the
+# C dependencies.  Fortunately there is (usually) a version of (e.g.) gcc
+# kicking around which does.  If CCD is defined, then use that to generate the
+# C dependency files, otherwise CC is used.
+CCD =
 
 # --- C++ ---
 # compiler
 CXX = g++
 # compiler flags
 CXXFLAGS = -O3
+# Not all compilers (e.g. xlc++) support -MM -MT that we require to produce the
+# C++ dependencies.  Fortunately there is (usually) a version of (e.g.) g++
+# kicking around which does.  If CXXD is defined, then use that to generate the
+# C++ dependency files, otherwise CXX is used.
+CXXD =
 
 # --- Linker ---
 # linker
