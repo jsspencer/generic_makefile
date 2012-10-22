@@ -184,8 +184,12 @@ endif
 C_FILES = $(filter $(addprefix %,$(CEXTS)), $(SRCFILES))
 C_DEPEND = $(addprefix $(DEPEND_DIR)/, $(addsuffix .d, $(basename $(notdir $(C_FILES)))))
 # Use CC (CXX) to generate C (C++) dependency files unless CCD (CXXD) is defined.
-CCD ?= $(CC)
-CXXD ?= $(CXX)
+ifeq ($(CCD),)
+CCD = $(CC)
+endif
+ifeq ($(CXXD),)
+CXXD = $(CXX)
+endif
 
 #-----
 # Compilation macros.
@@ -227,7 +231,7 @@ $(DEST)/%.o: %.c
 
 # corresponding dependency...
 $(DEPEND_DIR)/%.d: %.c
-	$(CCD) $(INCLUDE) $(CFLAGS) -MM -MT '$$(DEST)/$(@F:.d=.o)' $< -o $@
+	$(CCD) $(CPPFLAGS) $(INCLUDE) $(CFLAGS) -MM -MT '$$(DEST)/$(@F:.d=.o)' $< -o $@
 
 #--- C++ ---
 
@@ -239,7 +243,7 @@ $(DEST)/%.o: %.cpp
 
 # corresponding dependency...
 $(DEPEND_DIR)/%.d: %.cpp
-	$(CXXD) $(INCLUDE) $(CXXFLAGS) -MM -MT '$$(DEST)/$(@F:.d=.o)' $< -o $@
+	$(CXXD) $(CPPFLAGS) $(INCLUDE) $(CXXFLAGS) -MM -MT '$$(DEST)/$(@F:.d=.o)' $< -o $@
 
 #-----
 # Goals.
