@@ -121,8 +121,11 @@ LIB = lib$(PROG_NAME).a
 DEST_ROOT = dest
 DEST = $(DEST_ROOT)/$(CONFIG)/$(OPT)
 
-# Directory for compiled executables and libraries.
-EXE = bin
+# Directory for compiled executables.
+BIN_DIR = bin
+
+# Directory for compiled libraries.
+LIB_DIR = lib
 
 # Directory for dependency files.
 DEPEND_DIR = $(DEST_ROOT)/depend
@@ -244,32 +247,32 @@ $(DEPEND_DIR)/%.d: %.cpp
 LINK_MACRO = cd $(@D) && ln -s -f $(<F) $(@F)
 
 # Compile program.
-$(EXE)/$(PROG): $(EXE)/$(PROG_VERSION)
+$(BIN_DIR)/$(PROG): $(BIN_DIR)/$(PROG_VERSION)
 	$(LINK_MACRO)
 
-$(EXE)/$(PROG_VERSION): $(OBJECTS) | $(EXE)
+$(BIN_DIR)/$(PROG_VERSION): $(OBJECTS) | $(BIN_DIR)
 	$(LD) -o $@ $(FFLAGS) $(LDFLAGS) -I $(DEST) $(OBJECTS) $(LIBS)
 
 # Compile library.
-$(EXE)/$(LIB): $(EXE)/$(LIB_VERSION)
+$(LIB_DIR)/$(LIB): $(LIB_DIR)/$(LIB_VERSION)
 	$(LINK_MACRO)
 
-$(EXE)/$(LIB_VERSION): $(LIB_OBJECTS) | $(EXE)
+$(LIB_DIR)/$(LIB_VERSION): $(LIB_OBJECTS) | $(LIB_DIR)
 	$(AR) $(ARFLAGS) $@ $^
 
 # Create directories.
-$(EXE) $(DEST) $(DEPEND_DIR):
+$(BIN_DIR) $(LIB_DIR) $(DEST) $(DEPEND_DIR):
 	mkdir -p $@
 
 # Remove compiled objects and executable.
 clean:
-	rm -f $(DEST)/* $(EXE)/$(PROG_VERSION) $(EXE)/$(LIB_VERSION)
+	rm -f $(DEST)/* $(BIN_DIR)/$(PROG_VERSION) $(LIB_DIR)/$(LIB_VERSION)
 
 cleanall:
-	rm -rf $(DEST_ROOT) $(EXE)
+	rm -rf $(DEST_ROOT) $(BIN_DIR) $(LIB_DIR)
 
 # Build from scratch.
-new: clean $(EXE)/$(PROG)
+new: clean $(BIN_DIR)/$(PROG)
 
 # Generate dependency file.
 $(F_DEPEND): $(F_FILES)
@@ -281,8 +284,8 @@ ctags:
 	ctags $(SRCFILES)
 
 # shortcuts
-program: $(EXE)/$(PROG)
-library: $(EXE)/$(LIB)
+program: $(BIN_DIR)/$(PROG)
+library: $(BIN_DIR)/$(LIB)
 
 help:
 	@echo Usage: make target [ARCH=XXX]
@@ -291,18 +294,18 @@ help:
 	@echo
 	@echo Available targets:
 	@echo
-	@echo $(EXE)/$(PROG) [default]
-	@echo -e "\tCompile $(EXE)/$(PROG_VERSION) and create $(EXE)/$(PROG) as a symbolic link to it."
-	@echo $(EXE)/$(PROG_VERSION)
-	@echo -e "\tCompile the $(EXE)/$(PROG_VERSION) executable using the settings in $(SETTINGS_INC)."
-	@echo $(EXE)/$(LIB)
-	@echo -e "\tCompile $(EXE)/$(LIB_VERSION) and create $(EXE)/$(LIB) as a symbolic link to it."
-	@echo $(EXE)/$(LIB_VERSION)
-	@echo -e "\tCompile the $(EXE)/$(LIB_VERSION) library using the settings in $(SETTINGS_INC)."
+	@echo $(BIN_DIR)/$(PROG) [default]
+	@echo -e "\tCompile $(BIN_DIR)/$(PROG_VERSION) and create $(BIN_DIR)/$(PROG) as a symbolic link to it."
+	@echo $(BIN_DIR)/$(PROG_VERSION)
+	@echo -e "\tCompile the $(BIN_DIR)/$(PROG_VERSION) executable using the settings in $(SETTINGS_INC)."
+	@echo $(LIB_DIR)/$(LIB)
+	@echo -e "\tCompile $(LIB_DIR)/$(LIB_VERSION) and create $(LIB_DIR)/$(LIB) as a symbolic link to it."
+	@echo $(LIB_DIR)/$(LIB_VERSION)
+	@echo -e "\tCompile the $(LIB_DIR)/$(LIB_VERSION) library using the settings in $(SETTINGS_INC)."
 	@echo program
-	@echo -e "\tShortcut for the $(EXE)/$(PROG) target."
+	@echo -e "\tShortcut for the $(BIN_DIR)/$(PROG) target."
 	@echo library
-	@echo -e "\tShortcut for the $(EXE)/$(LIB) target."
+	@echo -e "\tShortcut for the $(LIB_DIR)/$(LIB) target."
 	@echo ctags
 	@echo -e "\tRun ctags on all source files."
 	@echo clean
@@ -310,7 +313,7 @@ help:
 	@echo cleanall
 	@echo -e "\tDelete all object files, dependency files, binaries and libraries created by all configurations."
 	@echo new
-	@echo -e "\tRun the clean and then $(EXE)/$(PROG) targets."
+	@echo -e "\tRun the clean and then $(BIN_DIR)/$(PROG) targets."
 
 #-----
 # Dependencies.

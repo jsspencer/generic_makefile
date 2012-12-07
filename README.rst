@@ -26,10 +26,13 @@ settings.
 File structure
 --------------
 
-``Makefile`` will create the following directories (relative to the working directory):
+``Makefile`` will create the directories as needed, with the following default
+names relative to the working directory:
 
 bin/
-    Contains compiled libraries and executables.
+    Contains compiled executables.
+lib/
+    Contains compiled libraries.
 dest/depend/
     Contains files which provide the dependency rules governing the compilation
     order and which files need to be recompiled if a given file changes.
@@ -37,6 +40,11 @@ dest/depend/
 dest/CONFIG/OPT/
     Contains compiled object files.  CONFIG and OPT are variables set in
     a ``make.inc`` file.
+
+.. warning::
+
+    These directories are removed by the cleanall target and so should not
+    contain *any* files which are not produced by a target in the makefile..
 
 ``Makefile`` can be used to create:
 
