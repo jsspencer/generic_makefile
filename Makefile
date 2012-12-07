@@ -127,15 +127,6 @@ EXE = bin
 # Directory for dependency files.
 DEPEND_DIR = $(DEST_ROOT)/depend
 
-ifeq ($(__COMPILE_TARGET__),yes)
-# We put compiled objects and modules in $(DEST).  If it doesn't exist, create it.
-make_dest := $(shell test -e $(DEST) || mkdir -p $(DEST))
-# We put the compiled executable in $(EXE).  If it doesn't exist, then create it.
-make_exe := $(shell test -e $(EXE) || mkdir -p $(EXE))
-# We put the compiled executable in $(DEPEND_DIR).  If it doesn't exist, then create it.
-make_depend := $(shell test -e $(DEPEND_DIR) || mkdir -p $(DEPEND_DIR))
-endif
-
 #-----
 # Find source files and resultant object files.
 
@@ -256,15 +247,19 @@ LINK_MACRO = cd $(@D) && ln -s -f $(<F) $(@F)
 $(EXE)/$(PROG): $(EXE)/$(PROG_VERSION)
 	$(LINK_MACRO)
 
-$(EXE)/$(PROG_VERSION): $(OBJECTS)
+$(EXE)/$(PROG_VERSION): $(OBJECTS) | $(EXE)
 	$(LD) -o $@ $(FFLAGS) $(LDFLAGS) -I $(DEST) $(OBJECTS) $(LIBS)
 
 # Compile library.
 $(EXE)/$(LIB): $(EXE)/$(LIB_VERSION)
 	$(LINK_MACRO)
 
-$(EXE)/$(LIB_VERSION): $(LIB_OBJECTS)
+$(EXE)/$(LIB_VERSION): $(LIB_OBJECTS) | $(EXE)
 	$(AR) $(ARFLAGS) $@ $^
+
+# Create directories.
+$(EXE) $(DEST) $(DEPEND_DIR):
+	mkdir -p $@
 
 # Remove compiled objects and executable.
 clean:
@@ -318,10 +313,13 @@ help:
 	@echo -e "\tRun the clean and then $(EXE)/$(PROG) targets."
 
 #-----
-# Include dependency file.
+# Dependencies.
 
+# Include dependency file.
 # $(*_DEPEND) will be generated if it doesn't exist.
 ifeq ($(__COMPILE_TARGET__),yes)
+# Create dependency directory if required.
+$(F_DEPEND) $(C_DEPEND): | $(DEPEND_DIR)
 ifneq ($(F_DEPEND),)
 include $(F_DEPEND)
 endif
@@ -331,7 +329,10 @@ endif
 endif
 
 # Other dependencies.
+# Rebuild objects from files given in FORCE_REBUILD_FILES if any other source file has changed.
 ifneq ($(FORCE_REBUILD_FILES),)
 FORCE_REBUILD_OBJECTS := $(call objects_path, $(FORCE_REBUILD_FILES))
 $(FORCE_REBUILD_OBJECTS): $(SRCFILES)
 endif
+# Create object directory if required before compiling anything.
+$(OBJECTS): | $(DEST)
