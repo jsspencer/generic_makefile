@@ -94,6 +94,17 @@ endif
 endif
 
 #-----
+# Utility commands
+
+# md5 sum of a file.
+md5 = $(firstword $(shell md5sum $1 2> /dev/null))
+# Check md5sum (first argument) is the md5sum of a file (second argument).
+# Null output if true, returns __FORCE_BUILD__ if false.
+# If md5sum doesn't exist (unlikely!) then we err on the side of caution and
+# always set __FORCE_BUILD__.
+md5_check = $(shell echo $1 $2 | md5sum -c --quiet - > /dev/null 2>/dev/null || echo __FORCE_BUILD__)
+
+#-----
 # Program
 
 # A source file *must* contain a program entry (e.g.  main() or equivalent
@@ -113,6 +124,12 @@ LIB_VERSION = lib$(PROG_NAME).$(CONFIG).$(OPT).a
 
 # Symbolic link which points to $(LIB_VERSION).
 LIB = lib$(PROG_NAME).a
+
+# Force update of symbolic link if symbolic link doesn't already point to the file.
+# (This can occur if we re-run make with a different ARCH file and the binary
+# does not need to be updated.)
+PROG_RELINK = $(call md5_check, $(call md5, $(BIN_DIR)/$(PROG_VERSION)), $(BIN_DIR)/$(PROG))
+LIB_RELINK = $(call md5_check, $(call md5, $(LIB_DIR)/$(LIB_VERSION)), $(LIB_DIR)/$(LIB))
 
 #-----
 # Directory structure and setup.
@@ -242,19 +259,19 @@ $(DEPEND_DIR)/%.d: %.cpp
 #-----
 # Goals.
 
-.PHONY: clean cleanall new help ctags program library
+.PHONY: clean cleanall new help ctags program library __FORCE_BUILD__
 
 LINK_MACRO = cd $(@D) && ln -s -f $(<F) $(@F)
 
 # Compile program.
-$(BIN_DIR)/$(PROG): $(BIN_DIR)/$(PROG_VERSION)
+$(BIN_DIR)/$(PROG): $(BIN_DIR)/$(PROG_VERSION) $(PROG_RELINK)
 	$(LINK_MACRO)
 
 $(BIN_DIR)/$(PROG_VERSION): $(OBJECTS) | $(BIN_DIR)
 	$(LD) -o $@ $(FFLAGS) $(LDFLAGS) -I $(DEST) $(OBJECTS) $(LIBS)
 
 # Compile library.
-$(LIB_DIR)/$(LIB): $(LIB_DIR)/$(LIB_VERSION)
+$(LIB_DIR)/$(LIB): $(LIB_DIR)/$(LIB_VERSION) $(LIB_RELINK)
 	$(LINK_MACRO)
 
 $(LIB_DIR)/$(LIB_VERSION): $(LIB_OBJECTS) | $(LIB_DIR)
@@ -286,6 +303,9 @@ ctags:
 # shortcuts
 program: $(BIN_DIR)/$(PROG)
 library: $(BIN_DIR)/$(LIB)
+
+# null target to force a build
+__FORCE_BUILD__: ;
 
 help:
 	@echo Usage: make target [ARCH=XXX]
