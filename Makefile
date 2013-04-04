@@ -64,19 +64,27 @@ FORCE_REBUILD_FILES =
 #-----
 # Error checking
 
-ifneq ($(filter-out help,$(MAKECMDGOALS)),)
-ifeq ($(PROG_NAME),)
-$(error ERROR: PROG_NAME is not defined.)
-endif
-ifeq ($(VPATH),)
-$(error ERROR: VPATH is not defined.)
-endif
+# Throw an error unless only running help.
+ERR = error
+ERR_STRING = ERROR
+STOP =  # Yes, I do like nicely (and consistently) formatted error and warning messages.
+BUILDING = yes
+ifndef MAKECMDGOALS
+else ifeq ($(filter-out help,$(MAKECMDGOALS)),)
+ERR = warning
+ERR_STRING = WARNING
+STOP = .
+BUILDING = no
 endif
 
-ifeq ($(filter help,$(MAKECMDGOALS)),help)
 ifeq ($(PROG_NAME),)
-$(warning WARNING: PROG_NAME is not defined.)
+$(call $(ERR), $(ERR_STRING): PROG_NAME is not defined$(STOP))
 PROG_NAME = PROG_NAME
+endif
+# Errors/warnings only if actually building a target...
+ifeq ($(BUILDING), yes)
+ifeq ($(VPATH),)
+$(call $(ERR), $(ERR_STRING): VPATH is not defined$(STOP))
 endif
 endif
 
