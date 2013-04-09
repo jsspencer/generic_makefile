@@ -314,7 +314,7 @@ else ifneq ($(filter-out program, $(MODE)),)
 endif
 
 cleanall:
-	rm -rf $(DEST_ROOT)
+	rm -rf $(DEPEND_DIR) $(DEST_ROOT)
 # don't fail if {BIN,LIB}_DIR isn't empty (but also
 # don't remove other files from {BIN,LIB}_DIR which weren't created by
 # make).
