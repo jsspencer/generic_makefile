@@ -27,16 +27,6 @@
 SHELL=/bin/bash # For our sanity!
 
 #-----
-# Include arch file.
-
-ifeq ($(ARCH),)
-SETTINGS_INC = make.inc
-else
-SETTINGS_INC = make.inc.$(ARCH)
-endif
-include $(SETTINGS_INC)
-
-#-----
 # Configuration
 
 # Program name (stem of binary and library).
@@ -62,8 +52,42 @@ FORCE_REBUILD_FILES =
 MODE =
 
 #-----
+# Directory structure and setup.
+# The defaults below *should* be fine for almost all uses.
+
+# Directory for objects.
+# This is completely removed by cleanall so should not contain any source
+# files (i.e. is a temporary directory strictly for builds).
+DEST_ROOT = dest
+# Directory for objects for this specific configuration.
+# Do not change unless you know what you're doing!
+DEST = $(DEST_ROOT)/$(CONFIG)/$(OPT)
+
+# Directory for compiled executables.
+BIN_DIR = bin
+
+# Directory for compiled libraries.
+LIB_DIR = lib
+
+# Directory for dependency files.
+# This is completely removed by cleanall so should not contain any source
+# files (i.e. is a temporary directory strictly for holding the dependency
+# files).
+DEPEND_DIR = $(DEST_ROOT)/depend
+
+#-----
 # Should not need to change anything below here.
 #-----
+
+#-----
+# Include arch file.
+
+ifeq ($(ARCH),)
+SETTINGS_INC = make.inc
+else
+SETTINGS_INC = make.inc.$(ARCH)
+endif
+include $(SETTINGS_INC)
 
 #-----
 # Error checking
@@ -143,22 +167,6 @@ LIB = lib$(PROG_NAME).a
 # does not need to be updated.)
 PROG_RELINK = $(call md5_check, $(call md5, $(BIN_DIR)/$(PROG_VERSION)), $(BIN_DIR)/$(PROG))
 LIB_RELINK = $(call md5_check, $(call md5, $(LIB_DIR)/$(LIB_VERSION)), $(LIB_DIR)/$(LIB))
-
-#-----
-# Directory structure and setup.
-
-# Directory for objects.
-DEST_ROOT = dest
-DEST = $(DEST_ROOT)/$(CONFIG)/$(OPT)
-
-# Directory for compiled executables.
-BIN_DIR = bin
-
-# Directory for compiled libraries.
-LIB_DIR = lib
-
-# Directory for dependency files.
-DEPEND_DIR = $(DEST_ROOT)/depend
 
 #-----
 # Find source files and resultant object files.
