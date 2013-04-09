@@ -57,6 +57,10 @@ MAIN =
 # files need to be recompiled.
 FORCE_REBUILD_FILES = 
 
+# Allow files to be compiled into a program (MODE = program), or into a library
+# (MODE = library) or both (MODE = all).
+MODE =
+
 #-----
 # Should not need to change anything below here.
 #-----
@@ -81,11 +85,12 @@ ifeq ($(PROG_NAME),)
 $(call $(ERR), $(ERR_STRING): PROG_NAME is not defined$(STOP))
 PROG_NAME = PROG_NAME
 endif
-# Errors/warnings only if actually building a target...
-ifeq ($(BUILDING), yes)
+ifneq ($(filter-out all program library,$(MODE)),)
+$(call $(ERR), $(ERR_STRING): Invalid MODE variable.  MODE must be one of all, program or library.)
+MODE = all
+endif
 ifeq ($(VPATH),)
 $(call $(ERR), $(ERR_STRING): VPATH is not defined$(STOP))
-endif
 endif
 
 #-----
@@ -271,19 +276,29 @@ $(DEPEND_DIR)/%.d: %.cpp
 
 LINK_MACRO = cd $(@D) && ln -s -f $(<F) $(@F)
 
-# Compile program.
+# Compile program (if desired).
+ifneq ($(filter-out library, $(MODE)),)
 $(BIN_DIR)/$(PROG): $(BIN_DIR)/$(PROG_VERSION) $(PROG_RELINK)
 	$(LINK_MACRO)
 
 $(BIN_DIR)/$(PROG_VERSION): $(OBJECTS) | $(BIN_DIR)
 	$(LD) -o $@ $(FFLAGS) $(LDFLAGS) -I $(DEST) $(OBJECTS) $(LIBS)
 
-# Compile library.
+# shortcut
+program: $(BIN_DIR)/$(PROG)
+endif
+
+# Compile library (if desired).
+ifneq ($(filter-out program, $(MODE)),)
 $(LIB_DIR)/$(LIB): $(LIB_DIR)/$(LIB_VERSION) $(LIB_RELINK)
 	$(LINK_MACRO)
 
 $(LIB_DIR)/$(LIB_VERSION): $(LIB_OBJECTS) | $(LIB_DIR)
 	$(AR) $(ARFLAGS) $@ $^
+
+# shortcut
+library: $(BIN_DIR)/$(LIB)
+endif
 
 # Create directories.
 $(BIN_DIR) $(LIB_DIR) $(DEST) $(DEPEND_DIR):
@@ -291,13 +306,28 @@ $(BIN_DIR) $(LIB_DIR) $(DEST) $(DEPEND_DIR):
 
 # Remove compiled objects and executable.
 clean:
-	rm -f $(DEST)/* $(BIN_DIR)/$(PROG_VERSION) $(LIB_DIR)/$(LIB_VERSION)
+	rm -f $(DEST)/*
+ifneq ($(filter-out library, $(MODE)),)
+	rm -f $(BIN_DIR)/$(PROG_VERSION) $(BIN_DIR)/$(PROG)
+else ifneq ($(filter-out program, $(MODE)),)
+	rm -f $(LIB_DIR)/$(LIB_VERSION) $(LIB_DIR)/$(LIB)
+endif
 
 cleanall:
-	rm -rf $(DEST_ROOT) $(BIN_DIR) $(LIB_DIR)
+	rm -rf $(DEST_ROOT)
+# don't fail if {BIN,LIB}_DIR isn't empty (but also
+# don't remove other files from {BIN,LIB}_DIR which weren't created by
+# make).
+ifneq ($(filter-out library, $(MODE)),)
+	rm -f $(BIN_DIR)/$(PROG_NAME).*.x $(BIN_DIR)/$(PROG)
+	rmdir $(BIN_DIR) || true
+else ifneq ($(filter-out program, $(MODE)),)
+	rm -f $(LIB_DIR)/lib$(PROG_NAME).*.a $(LIB_DIR)/$(LIB)
+	rmdir $(LIB_DIR) || true
+endif
 
 # Build from scratch.
-new: clean $(BIN_DIR)/$(PROG)
+new: clean $(.DEFAULT_GOAL)
 
 # Generate dependency file.
 $(F_DEPEND): $(F_FILES)
@@ -307,10 +337,6 @@ $(F_DEPEND): $(F_FILES)
 # ctags >> etags supplied by emacs
 ctags:
 	ctags $(SRCFILES)
-
-# shortcuts
-program: $(BIN_DIR)/$(PROG)
-library: $(BIN_DIR)/$(LIB)
 
 # null target to force a build
 __FORCE_BUILD__: ;
@@ -322,18 +348,26 @@ help:
 	@echo
 	@echo Available targets:
 	@echo
+ifneq ($(filter-out library, $(MODE)),)
 	@echo $(BIN_DIR)/$(PROG) [default]
 	@echo -e "\tCompile $(BIN_DIR)/$(PROG_VERSION) and create $(BIN_DIR)/$(PROG) as a symbolic link to it."
 	@echo $(BIN_DIR)/$(PROG_VERSION)
 	@echo -e "\tCompile the $(BIN_DIR)/$(PROG_VERSION) executable using the settings in $(SETTINGS_INC)."
+	@echo program
+	@echo -e "\tShortcut for the $(BIN_DIR)/$(PROG) target."
+endif
+ifneq ($(filter-out program, $(MODE)),)
+ifeq ($(filter-out library, $(MODE)),library)
+	@echo $(LIB_DIR)/$(LIB) [default]
+else
 	@echo $(LIB_DIR)/$(LIB)
+endif
 	@echo -e "\tCompile $(LIB_DIR)/$(LIB_VERSION) and create $(LIB_DIR)/$(LIB) as a symbolic link to it."
 	@echo $(LIB_DIR)/$(LIB_VERSION)
 	@echo -e "\tCompile the $(LIB_DIR)/$(LIB_VERSION) library using the settings in $(SETTINGS_INC)."
-	@echo program
-	@echo -e "\tShortcut for the $(BIN_DIR)/$(PROG) target."
 	@echo library
 	@echo -e "\tShortcut for the $(LIB_DIR)/$(LIB) target."
+endif
 	@echo ctags
 	@echo -e "\tRun ctags on all source files."
 	@echo clean
