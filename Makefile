@@ -109,8 +109,12 @@ ifeq ($(PROG_NAME),)
 $(call $(ERR), $(ERR_STRING): PROG_NAME is not defined$(STOP))
 PROG_NAME = PROG_NAME
 endif
+ifeq ($(MODE),)
+$(call $(ERR), $(ERR_STRING): Invalid MODE.  MODE must be one of all, program or library.)
+MODE = all
+endif
 ifneq ($(filter-out all program library,$(MODE)),)
-$(call $(ERR), $(ERR_STRING): Invalid MODE variable.  MODE must be one of all, program or library.)
+$(call $(ERR), $(ERR_STRING): Invalid MODE.  MODE must be one of all, program or library.)
 MODE = all
 endif
 ifeq ($(VPATH),)
