@@ -49,7 +49,17 @@ FORCE_REBUILD_FILES =
 
 # Allow files to be compiled into a program (MODE = program), or into a library
 # (MODE = library) or both (MODE = all).
-MODE =
+MODE = 
+
+# Form of program and library names.
+# The defaults should be fine for most cases.
+# The program is called $(PROG_NAME).$(CONFIG).$(OPT)$(PROG_SUFFIX) and
+# a symlink, $(PROG_NAME)$(PROG_SUFFIX) points to it.
+PROG_SUFFIX = .x
+# The library is called $(LIB_PREFIX)$(PROG_NAME).$(CONFIG).$(OPT)$(LIB_SUFFIX)
+# and a symlink, $(LIB_PREFIX)$(PROG_NAME)$(LIB_SUFFIX) points to it.
+LIB_PREFIX = lib
+LIB_SUFFIX = .a
 
 #-----
 # Directory structure and setup.
@@ -152,19 +162,19 @@ md5_check = $(shell echo $1 $2 | md5sum -c --quiet - > /dev/null 2>/dev/null || 
 # procedure) in order to create a binary.
 
 # Specific version of binary.
-PROG_VERSION = $(PROG_NAME).$(CONFIG).$(OPT).x
+PROG_VERSION = $(PROG_NAME).$(CONFIG).$(OPT)$(PROG_SUFFIX)
 
 # Symbolic link which points to $(PROG_VERSION).
-PROG = $(PROG_NAME).x
+PROG = $(PROG_NAME)$(PROG_SUFFIX)
 
 # MAIN *must* be defined *or* no source files contain a program entry (e.g.
 # main() or equivalent procedure) in order to create a library.
 
 # Specific version of library.
-LIB_VERSION = lib$(PROG_NAME).$(CONFIG).$(OPT).a
+LIB_VERSION = $(LIB_PREFIX)$(PROG_NAME).$(CONFIG).$(OPT)$(LIB_SUFFIX)
 
 # Symbolic link which points to $(LIB_VERSION).
-LIB = lib$(PROG_NAME).a
+LIB = $(LIB_PREFIX)$(PROG_NAME)$(LIB_SUFFIX)
 
 # Force update of symbolic link if symbolic link doesn't already point to the file.
 # (This can occur if we re-run make with a different ARCH file and the binary
@@ -331,10 +341,10 @@ cleanall:
 # don't remove other files from {BIN,LIB}_DIR which weren't created by
 # make).
 ifneq ($(filter-out library, $(MODE)),)
-	rm -f $(BIN_DIR)/$(PROG_NAME).*.x $(BIN_DIR)/$(PROG)
+	rm -f $(BIN_DIR)/$(PROG_NAME).*$(PROG_SUFFIX) $(BIN_DIR)/$(PROG)
 	rmdir $(BIN_DIR) || true
 else ifneq ($(filter-out program, $(MODE)),)
-	rm -f $(LIB_DIR)/lib$(PROG_NAME).*.a $(LIB_DIR)/$(LIB)
+	rm -f $(LIB_DIR)/$(LIB_PREFIX)$(PROG_NAME).*$(LIB_SUFFIX) $(LIB_DIR)/$(LIB)
 	rmdir $(LIB_DIR) || true
 endif
 
