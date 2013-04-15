@@ -383,7 +383,7 @@ endif
 	@echo cleanall
 	@echo -e "\tDelete all object files, dependency files, binaries and libraries created by all configurations."
 	@echo new
-	@echo -e "\tRun the clean and then $(BIN_DIR)/$(PROG) targets."
+	@echo -e "\tRun the clean and then default targets."
 
 #-----
 # Dependencies.
