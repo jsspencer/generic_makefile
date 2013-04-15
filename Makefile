@@ -331,7 +331,8 @@ clean:
 	rm -f $(DEST)/*
 ifneq ($(filter-out library, $(MODE)),)
 	rm -f $(BIN_DIR)/$(PROG_VERSION) $(BIN_DIR)/$(PROG)
-else ifneq ($(filter-out program, $(MODE)),)
+endif
+ifneq ($(filter-out program, $(MODE)),)
 	rm -f $(LIB_DIR)/$(LIB_VERSION) $(LIB_DIR)/$(LIB)
 endif
 
@@ -343,7 +344,8 @@ cleanall:
 ifneq ($(filter-out library, $(MODE)),)
 	rm -f $(BIN_DIR)/$(PROG_NAME).*$(PROG_SUFFIX) $(BIN_DIR)/$(PROG)
 	rmdir $(BIN_DIR) || true
-else ifneq ($(filter-out program, $(MODE)),)
+endif
+ifneq ($(filter-out program, $(MODE)),)
 	rm -f $(LIB_DIR)/$(LIB_PREFIX)$(PROG_NAME).*$(LIB_SUFFIX) $(LIB_DIR)/$(LIB)
 	rmdir $(LIB_DIR) || true
 endif
