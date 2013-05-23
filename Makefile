@@ -304,7 +304,7 @@ $(BIN_DIR)/$(PROG): $(BIN_DIR)/$(PROG_VERSION) $(PROG_RELINK)
 	$(LINK_MACRO)
 
 $(BIN_DIR)/$(PROG_VERSION): $(OBJECTS) | $(BIN_DIR)
-	$(LD) -o $@ $(FFLAGS) $(LDFLAGS) -I $(DEST) $(OBJECTS) $(LIBS)
+	$(LD) -o $@ $(LDFLAGS) -I $(DEST) $(OBJECTS) $(LIBS)
 
 # shortcut
 program: $(BIN_DIR)/$(PROG)
