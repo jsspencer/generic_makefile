@@ -179,8 +179,7 @@ LIB = $(LIB_PREFIX)$(PROG_NAME)$(LIB_SUFFIX)
 # Force update of symbolic link if symbolic link doesn't already point to the file.
 # (This can occur if we re-run make with a different ARCH file and the binary
 # does not need to be updated.)
-PROG_RELINK = $(call md5_check, $(call md5, $(BIN_DIR)/$(PROG_VERSION)), $(BIN_DIR)/$(PROG))
-LIB_RELINK = $(call md5_check, $(call md5, $(LIB_DIR)/$(LIB_VERSION)), $(LIB_DIR)/$(LIB))
+RELINK = $(call md5_check, $(call md5, $1), $2)
 
 #-----
 # Find source files and resultant object files.
@@ -300,7 +299,7 @@ LINK_MACRO = cd $(@D) && ln -s -f $(<F) $(@F)
 
 # Compile program (if desired).
 ifneq ($(filter-out library, $(MODE)),)
-$(BIN_DIR)/$(PROG): $(BIN_DIR)/$(PROG_VERSION) $(PROG_RELINK)
+$(BIN_DIR)/$(PROG): $(BIN_DIR)/$(PROG_VERSION) $(call RELINK, $(BIN_DIR)/$(PROG_VERSION), $(BIN_DIR)/$(PROG))
 	$(LINK_MACRO)
 
 $(BIN_DIR)/$(PROG_VERSION): $(OBJECTS) | $(BIN_DIR)
@@ -312,7 +311,7 @@ endif
 
 # Compile library (if desired).
 ifneq ($(filter-out program, $(MODE)),)
-$(LIB_DIR)/$(LIB): $(LIB_DIR)/$(LIB_VERSION) $(LIB_RELINK)
+$(LIB_DIR)/$(LIB): $(LIB_DIR)/$(LIB_VERSION) $(call RELINK, $(LIB_DIR)/$(LIB_VERSION), $(LIB_DIR)/$(LIB))
 	$(LINK_MACRO)
 
 $(LIB_DIR)/$(LIB_VERSION): $(LIB_OBJECTS) | $(LIB_DIR)
