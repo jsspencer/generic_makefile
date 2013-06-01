@@ -318,7 +318,7 @@ $(LIB_DIR)/$(LIB_VERSION): $(LIB_OBJECTS) | $(LIB_DIR)
 	$(AR) $(ARFLAGS) $@ $^
 
 # shortcut
-library: $(BIN_DIR)/$(LIB)
+library: $(LIB_DIR)/$(LIB)
 endif
 
 # Create directories.
