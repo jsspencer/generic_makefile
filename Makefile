@@ -351,7 +351,9 @@ ifneq ($(filter-out program, $(MODE)),)
 endif
 
 # Build from scratch.
-new: clean $(.DEFAULT_GOAL)
+new:
+	$(MAKE) clean
+	$(MAKE) $(.DEFAULT_GOAL)
 
 # Generate dependency file.
 $(F_DEPEND): $(F_FILES)
