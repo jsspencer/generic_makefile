@@ -129,7 +129,7 @@ configuration files.  An example configuration file for the GCC compiler suite,
 
     tools/mkconfig --help
 
-and
+and::
 
     tools/mkconfig --help-long
 
