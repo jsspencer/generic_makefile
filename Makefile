@@ -137,7 +137,7 @@ endif
 ifeq ($(MAKECMDGOALS),)
 __COMPILE_TARGET__ := yes
 else
-ifneq ($(filter-out help clean cleanall ctags,$(MAKECMDGOALS)),)
+ifneq ($(filter-out help clean cleanall tags,$(MAKECMDGOALS)),)
 __COMPILE_TARGET__ := yes
 else
 __COMPILE_TARGET__ := no
@@ -293,7 +293,7 @@ $(DEPEND_DIR)/%.d: %.cpp
 #-----
 # Goals.
 
-.PHONY: clean cleanall new help ctags program library __FORCE_BUILD__
+.PHONY: clean cleanall new help program library __FORCE_BUILD__
 
 LINK_MACRO = cd $(@D) && ln -s -f $(<F) $(@F)
 
@@ -360,7 +360,7 @@ $(F_DEPEND): $(F_FILES)
 
 # tag files
 # ctags >> etags supplied by emacs
-ctags:
+tags: $(SRCFILES)
 	ctags $(SRCFILES)
 
 # null target to force a build
@@ -393,7 +393,7 @@ endif
 	@echo library
 	@echo -e "\tShortcut for the $(LIB_DIR)/$(LIB) target."
 endif
-	@echo ctags
+	@echo tags
 	@echo -e "\tRun ctags on all source files."
 	@echo clean
 	@echo -e "\tDelete all object files, binaries and libraries created using $(SETTINGS_INC)."
