@@ -374,6 +374,13 @@ tags: $(SRCFILES)
 # null target to force a build
 __FORCE_BUILD__: ;
 
+# http://blog.melski.net/2010/11/30/makefile-hacks-print-the-value-of-any-variable/
+print-%: __FORCE_BUILD__
+	@echo '$*=$($*)'
+	@echo '  origin = $(origin $*)'
+	@echo '  flavor = $(flavor $*)'
+	@echo '  value  = $(value  $*)'
+
 help:
 	@echo Usage: make target [ARCH=XXX]
 	@echo
@@ -409,6 +416,8 @@ endif
 	@echo -e "\tDelete all object files, dependency files, binaries and libraries created by all configurations."
 	@echo new
 	@echo -e "\tRun the clean and then default targets."
+	@echo print-VARIABLE
+	@echo -e "\tPrint information about the named variable (e.g. DEST or SRCDIRS)."
 
 #-----
 # Dependencies.
