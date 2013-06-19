@@ -90,6 +90,14 @@ DEPEND_DIR = $(DEST_ROOT)/depend
 #-----
 
 #-----
+# Get filename of the makefile.
+# See http://stackoverflow.com/questions/1400057/getting-the-name-of-the-makefile-from-the-makefile
+
+# NOTE: this can be overridden if this makefile is included in another
+# makefile.
+MAKEFILE_NAME := $(CURDIR)/$(word $(words $(MAKEFILE_LIST)), $(MAKEFILE_LIST))
+
+#-----
 # Include arch file.
 
 ifeq ($(ARCH),)
@@ -351,8 +359,8 @@ endif
 
 # Build from scratch.
 new:
-	$(MAKE) clean
-	$(MAKE) $(.DEFAULT_GOAL)
+	$(MAKE) -f $(MAKEFILE_NAME) clean
+	$(MAKE) -f $(MAKEFILE_NAME) $(.DEFAULT_GOAL)
 
 # Generate dependency file.
 $(F_DEPEND): $(F_FILES)
