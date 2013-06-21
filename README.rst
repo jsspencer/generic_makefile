@@ -27,7 +27,8 @@ File structure
 --------------
 
 ``Makefile`` will create the directories as needed, with the following default
-names relative to the working directory:
+names (easily changed--see comments in ``Makefile``) relative to the working
+directory:
 
 bin/
     Contains compiled executables.
@@ -43,8 +44,10 @@ dest/CONFIG/OPT/
 
 .. warning::
 
-    These directories are removed by the cleanall target and so should not
-    contain *any* files which are not produced by a target in the makefile..
+    The dest directory is removed by the ``cleanall`` target and so should not
+    contain **any** files which are not produced by a target in the makefile..
+    Similarly **all** files in the dest/CONFIG/OPT/ directory are deleted by
+    the ``clean`` target.
 
 ``Makefile`` can be used to create:
 
