@@ -156,12 +156,10 @@ endif
 # Utility commands
 
 # md5 sum of a file.
-md5 = $(shell md5sum $1 2> /dev/null)
+md5 = $(firstword $(shell md5sum $1 ))
 # Check md5sum (first argument) is the md5sum of a file (second argument).
 # Null output if true, returns __FORCE_BUILD__ if false.
-# If md5sum doesn't exist (unlikely!) then we err on the side of caution and
-# always set __FORCE_BUILD__.
-#md5_check = $(shell echo "$(subst $1,$2,$(call md5,$1))" | md5sum -c - > /dev/null || echo __FORCE_BUILD__)
+md5_check = $(if $(filter $(call md5,$(LIB_DIR)/$(LIB_VERSION)),$(call md5,$(LIB_DIR)/$(LIB))),,__FORCE_BUILD__)
 
 #-----
 # Program
