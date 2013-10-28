@@ -156,7 +156,7 @@ endif
 # Utility commands
 
 # md5 sum of a file.
-md5 = $(firstword $(shell md5sum $1 ))
+md5 = $(firstword $(shell md5sum $1 2> /dev/null ))
 # Check md5sum (first argument) is the md5sum of a file (second argument).
 # Null output if true, returns __FORCE_BUILD__ if false.
 md5_check = $(if $(filter $(call md5,$(LIB_DIR)/$(LIB_VERSION)),$(call md5,$(LIB_DIR)/$(LIB))),,__FORCE_BUILD__)
@@ -357,7 +357,7 @@ new:
 
 # Generate dependency file.
 $(F_DEPEND): $(F_FILES)
-	tools/sfmakedepend --file - --silent $^ --objdir \$$\(DEST\) --moddir \$$\(DEST\) > $@
+	tools/sfmakedepend --file - --silent --objdir \$$\(DEST\) --moddir \$$\(DEST\) --depend=mod $^ > $@
 
 # tag files
 # ctags >> etags supplied by emacs
