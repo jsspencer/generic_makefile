@@ -145,7 +145,7 @@ endif
 ifeq ($(MAKECMDGOALS),)
 __COMPILE_TARGET__ := yes
 else
-ifneq ($(filter-out help clean cleanall tags,$(MAKECMDGOALS)),)
+ifneq ($(filter-out help clean cleanall tags print-%,$(MAKECMDGOALS)),)
 __COMPILE_TARGET__ := yes
 else
 __COMPILE_TARGET__ := no
